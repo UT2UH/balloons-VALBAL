@@ -19,7 +19,7 @@
  * This function initializes the PCB hardware.
  */
 void Hardware::init() {
-  analogReference(INTERNAL);
+  //analogReference(INTERNAL);
   analogReadResolution(12);
 	pinMode(PAYLOAD_GATE, OUTPUT);
 	digitalWrite(PAYLOAD_GATE, LOW);

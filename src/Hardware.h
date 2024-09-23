@@ -14,7 +14,8 @@
 
 #include "Config.h"
 #include <EEPROM.h>
-#include <i2c_t3.h>
+#include <i2c_driver.h>
+#include <i2c_driver_wire.h>
 
 class Hardware {
 public:

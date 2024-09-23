@@ -14,7 +14,8 @@
   BSD license, all text above must be included in any redistribution
  ***************************************************************************/
 #include "Arduino.h"
-#include <i2c_t3.h>
+#include <i2c_driver.h>
+#include <i2c_driver_wire.h>
 #include <SPI.h>
 #include "Adafruit_BMP280.h"
 
@@ -23,9 +24,9 @@
  PRIVATE FUNCTIONS
  ***************************************************************************/
 
- void flushthefuck(void) {
- 				SPI0_MCR |= SPI_MCR_CLR_RXF;
- }
+//  void flushthefuck(void) {
+//  				SPI0_MCR |= SPI_MCR_CLR_RXF;
+//  }
 
 Adafruit_BMP280::Adafruit_BMP280()
   : _cs(-1), _mosi(-1), _miso(-1), _sck(-1)
@@ -130,7 +131,7 @@ uint8_t Adafruit_BMP280::read8(byte reg)
   } else {
     if (_sck == -1) {
       SPI.beginTransaction(SPISettings(500000, MSBFIRST, SPI_MODE0));
-      flushthefuck();
+      //flushthefuck();
     }
     digitalWrite(_cs, LOW);
     spixfer(reg | 0x80); // read, bit 7 high
@@ -161,7 +162,7 @@ uint16_t Adafruit_BMP280::read16(byte reg)
   } else {
     if (_sck == -1) {
       SPI.beginTransaction(SPISettings(500000, MSBFIRST, SPI_MODE0));
-      flushthefuck();
+      //flushthefuck();
     }
     digitalWrite(_cs, LOW);
     spixfer(reg | 0x80); // read, bit 7 high
@@ -222,7 +223,7 @@ uint32_t Adafruit_BMP280::read24(byte reg)
   } else {
     if (_sck == -1) {
       SPI.beginTransaction(SPISettings(500000, MSBFIRST, SPI_MODE0));
-      flushthefuck();
+      //flushthefuck();
     }
     digitalWrite(_cs, LOW);
     spixfer(reg | 0x80); // read, bit 7 high

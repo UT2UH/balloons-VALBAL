@@ -132,7 +132,8 @@ ongoing work.
 #ifndef LTC2991_H
 #define LTC2991_H
 
-#include <i2c_t3.h>
+#include <i2c_driver.h>
+#include <i2c_driver_wire.h>
 
 // Calibration Variables
 //! Typical single-ended LSB weight in volts

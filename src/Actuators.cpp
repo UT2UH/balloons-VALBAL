@@ -58,7 +58,7 @@ static int val_rev = 0;
 static int bal_fwd = 0;
 static int bal_rev = 0;
 
-auto pwm_fn = [&](){
+auto pwm_fn = [](){
   val_ctr++; val_ctr = val_ctr % n_cts;
   bal_ctr++; bal_ctr = bal_ctr % n_cts;
   digitalWriteFast(VALVE_FORWARD,(val_fwd==1)||((val_fwd==2)&&(val_ctr<val_duty)));

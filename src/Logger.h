@@ -12,7 +12,7 @@
 #define VAL_LOGGER_H
 
 #include <SdFat.h>
-#include <SdFormatter.h>
+//#include <SdFormatter.h>
 #include "Hardware.h"
 #include <bitset>
 
@@ -30,7 +30,7 @@ public:
   bool readSomething(int bn);
   bool log(void *data, int bytes, bool retry=true);
 
-  JankySdioCard card;
+  SdioCard card;
 
 private:
   struct block_t {

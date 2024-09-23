@@ -28,7 +28,8 @@
  #include "TinyWireM.h"
  #define Wire TinyWireM
 #else
- #include <i2c_t3.h>
+ #include <i2c_driver.h>
+ #include <i2c_driver_wire.h>
  #define Wire Wire1
 #endif
 

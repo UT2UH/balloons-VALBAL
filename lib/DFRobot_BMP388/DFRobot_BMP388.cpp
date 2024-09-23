@@ -18,9 +18,9 @@
 //#include "Wire.h"
 #include "SPI.h"
 
- void fflushthefuck(void) {
-                SPI0_MCR |= SPI_MCR_CLR_RXF;
- }
+//  void fflushthefuck(void) {
+//                 SPI0_MCR |= SPI_MCR_CLR_RXF;
+//  }
 
 
 int nCS;

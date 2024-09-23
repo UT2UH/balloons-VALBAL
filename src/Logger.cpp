@@ -50,7 +50,8 @@ bool Logger::log(void *data, int nbytes, bool retry) {
 	if (should_write && mode == SDMode::Idle) {
 		Serial.println("time to git going");
 		limit_block = (cur_block + MAX_SDHC_COUNT) & ~RU_MASK;
-		if (!card.writeStart(cur_block, limit_block - cur_block)) {
+		//if (!card.writeStart(cur_block, limit_block - cur_block)) {
+    if (!card.writeStart(cur_block)) {
 			Serial.println("[SD ERROR] writeStart failed");
 			return false;
 		}
@@ -72,7 +73,7 @@ bool Logger::log(void *data, int nbytes, bool retry) {
 				card.writeStop();
         break;
       }
-      if (!card.writeDataStart((const uint8_t*)&cache[to_write])) {
+      if (!card.writeData((const uint8_t*)&cache[to_write])) {
         Serial.println("[SD ERROR] writeBlockStart failed");
       }
       cache_avail[to_write] = true;
@@ -184,7 +185,7 @@ bool Logger::initialize() {
   int spooky_offset = (boundary_of_death-(int)(&dangerous_sea_of_ram)) >> 9;
   cache = (block_t*)(boundary_of_death - (spooky_offset << 9));
   Serial.println("card begin");
-  if (!card.begin()) {
+  if (!card.begin(SdioConfig(FIFO_SDIO))) {
     Serial.println("[SD ERROR] Could not initialize SD card.");
     return false;
   }
@@ -195,7 +196,7 @@ bool Logger::initialize() {
 bool Logger::findPosition() {
   uint32_t t0 = micros();
   uint32_t l = 0;
-  uint32_t r = card.cardSize()-1;
+  uint32_t r = card.sectorCount()-1;
 
   if (queryData(0)) {
     cur_block = 0;
@@ -242,7 +243,7 @@ bool Logger::wipe() {
   uint32_t const ERASE_SIZE = 8192L;
   uint32_t firstBlock = 0;
   uint32_t lastBlock;
-  uint32_t cardSizeBlocks = card.cardSize();
+  uint32_t cardSizeBlocks = card.sectorCount();
   Serial.println("card size blocks was");
   Serial.println(cardSizeBlocks);
 
@@ -262,11 +263,11 @@ bool Logger::wipe() {
   } while (firstBlock < cardSizeBlocks);
 
   uint8_t cache[512];
-  if (!card.readBlock(0, cache)) {
+  if (!card.readSector(0, cache)) {
     Serial.println("couldn't read block 0");
     return false;
   }
-  if (!card.readBlock(555, cache)) {
+  if (!card.readSector(555, cache)) {
     Serial.println("couldn't read block 555");
     return false;
   }
@@ -279,7 +280,7 @@ bool Logger::wipe() {
 
 bool Logger::writeSomething(int bn, void* frame) {
   //const uint8_t stuff[512] = "hi this is a test of me writing stuff and good shit let's try this";
-  if (!card.writeBlock(bn, (uint8_t*)frame)) {
+  if (!card.writeSector(bn, (uint8_t*)frame)) {
       Serial.print("writeblock failed ");
       Serial.println(bn);
       Serial.println(card.errorCode());
@@ -289,7 +290,7 @@ bool Logger::writeSomething(int bn, void* frame) {
 }
 bool Logger::readSomething(int bn) {
   char data[512];
-  if (!card.readBlock(bn, (uint8_t*)data)) {
+  if (!card.readSector(bn, (uint8_t*)data)) {
       Serial.print("[SD ERROR] readblock failed ");
       Serial.println(bn);
       Serial.println(card.errorCode());
@@ -305,7 +306,7 @@ bool Logger::readSomething(int bn) {
 
 bool Logger::queryData(int bn) {
   char data[512];
-  if (!card.readBlock(bn, (uint8_t*)data)) {
+  if (!card.readSector(bn, (uint8_t*)data)) {
       Serial.print("[SD ERROR] readblock failed ");
       Serial.println(bn);
       Serial.println(card.errorCode());
